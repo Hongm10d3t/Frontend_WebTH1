@@ -1,0 +1,19 @@
+.topbar-appBar {
+  background-color: #1976d2;
+}
+
+.topbar-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topbar-left {
+  font-weight: 600;
+}
+
+.topbar-right {
+  margin-left: auto;
+  font-weight: 500;
+  text-align: right;
+}

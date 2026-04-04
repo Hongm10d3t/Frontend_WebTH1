@@ -1,0 +1,76 @@
+.user-photos-container {
+    padding: 24px;
+}
+
+.user-photos-title {
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.photo-card {
+    margin-bottom: 28px;
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+
+.photo-image {
+    width: 100%;
+    max-width: 700px;
+    display: block;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.photo-date {
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.photo-divider {
+    margin: 12px 0 !important;
+}
+
+.comment-title {
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.comment-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-date {
+    color: #777;
+    margin-bottom: 4px;
+}
+
+.comment-user {
+    margin-bottom: 6px;
+}
+
+.comment-user-link {
+    text-decoration: none;
+    color: #1976d2;
+    font-weight: 600;
+}
+
+.comment-user-link:hover {
+    text-decoration: underline;
+}
+
+.comment-text {
+    color: #333;
+    line-height: 1.5;
+}
+
+.no-comment {
+    color: #888;
+    font-style: italic;
+}
