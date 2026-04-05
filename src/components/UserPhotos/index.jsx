@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Divider } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import models from "../../modelData/models";
+import axios from "axios";
 import "./styles.css";
 
 const images = require.context("../../images", false, /\.(png|jpe?g|svg)$/);
@@ -17,12 +17,62 @@ function getImageSrc(fileName) {
 function UserPhotos() {
   const { userId } = useParams();
 
-  const user = models.userModel(userId);
-  const photos = models.photoOfUserModel(userId);
+  const [user, setUser] = useState(null);
+  const [photos, setPhotos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
   };
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const [userRes, photosRes] = await Promise.all([
+          axios.get(`https://vm5rty-8080.csb.app/user/${userId}`),
+          axios.get(`https://vm5rty-8080.csb.app/photosOfUser/${userId}`),
+        ]);
+
+        setUser(userRes.data);
+        setPhotos(photosRes.data);
+      } catch (err) {
+        console.error("Lỗi lấy dữ liệu ảnh:", err);
+
+        if (err.response && err.response.status === 404) {
+          setUser(null);
+        } else {
+          setError("Không lấy được dữ liệu ảnh của người dùng");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, [userId]);
+
+  if (loading) {
+    return (
+      <div className="user-photos-container">
+        <Typography variant="body1">Loading...</Typography>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="user-photos-container">
+        <Typography variant="h5" className="user-photos-title">
+          Error
+        </Typography>
+        <Typography variant="body1">{error}</Typography>
+      </div>
+    );
+  }
 
   if (!user) {
     return (

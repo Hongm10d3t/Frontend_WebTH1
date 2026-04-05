@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Divider,
   List,
@@ -7,31 +7,45 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
+// em dùng axios gọi api đầy đủ từ backend không thông qua file fecthModelData ạ
 import "./styles.css";
-import models from "../../modelData/models";
 
 function UserList() {
-  const users = models.userListModel();
+  const [users, setUsers] = useState([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        const res = await axios.get("https://vm5rty-8080.csb.app/user/list");
+        console.log("DATA USER:", res.data);
+        setUsers(res.data);
+      } catch (err) {
+        console.error("Lỗi lấy danh sách user:", err);
+        setError("Không lấy được danh sách user");
+      }
+    };
+
+    loadUsers();
+  }, []);
 
   return (
     <div>
-      {/* <Typography variant="body1"> This is the user list, which takes up 3/12 of the window. You might choose to use <a href="https://mui.com/components/lists/">Lists</a>{" "} and <a href="https://mui.com/components/dividers/">Dividers</a> to display your users like so: </Typography> */}
-      <Typography variant="body1">
-        This is the user list
-      </Typography>
+      <Typography variant="body1">User List</Typography>
+
+      {error && (
+        <Typography variant="body2" color="error">
+          {error}
+        </Typography>
+      )}
 
       <List component="nav">
         {users.map((item) => (
           <React.Fragment key={item._id}>
-            <ListItem
-              button
-              component={Link}
-              to={`/users/${item._id}`}
-            >
-              <ListItemText
-                primary={`${item.first_name} ${item.last_name}`}
-              />
+            <ListItem button component={Link} to={`/users/${item._id}`}>
+              <ListItemText primary={`${item.first_name} ${item.last_name}`} />
             </ListItem>
             <Divider />
           </React.Fragment>

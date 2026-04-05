@@ -1,14 +1,62 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Divider, Button } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import models from "../../modelData/models";
+import axios from "axios";
 
 import "./styles.css";
 
-
 function UserDetail() {
   const { userId } = useParams();
-  const user = models.userModel(userId);
+
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const res = await axios.get(
+          `https://vm5rty-8080.csb.app/user/${userId}`
+        );
+
+        setUser(res.data);
+      } catch (err) {
+        console.error("Lỗi lấy chi tiết user:", err);
+
+        if (err.response && err.response.status === 404) {
+          setUser(null);
+        } else {
+          setError("Không lấy được thông tin người dùng");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUser();
+  }, [userId]);
+
+  if (loading) {
+    return (
+      <div className="user-detail-container">
+        <Typography variant="body1">Loading...</Typography>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="user-detail-container">
+        <Typography variant="h5" className="user-detail-title">
+          Error
+        </Typography>
+        <Typography variant="body1">{error}</Typography>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
@@ -64,11 +112,7 @@ function UserDetail() {
       </div>
 
       <div className="user-detail-actions">
-        <Button
-          variant="contained"
-          component={Link}
-          to={`/photos/${user._id}`}
-        >
+        <Button variant="contained" component={Link} to={`/photos/${user._id}`}>
           View Photos
         </Button>
       </div>
